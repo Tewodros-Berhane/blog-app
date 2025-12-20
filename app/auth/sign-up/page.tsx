@@ -6,8 +6,16 @@ import { signUpSchema } from "@/app/schemas/auth";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import z from "zod";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function SignUpPage() {
+    const router = useRouter();
+    const [isPending, startTransition] = useTransition();
     const form =useForm({
         resolver:zodResolver(signUpSchema),
         defaultValues:{
@@ -16,8 +24,23 @@ export default function SignUpPage() {
             password:"",
         }
     })
-    function onSubmit() {
-        console.log("Form submitted")
+    function onSubmit(data: z.infer<typeof signUpSchema>) {
+        startTransition(async () => {
+            await authClient.signUp.email({
+                name:data.name,
+                email:data.email,
+                password:data.password,
+                fetchOptions: {
+                    onSuccess: () => {
+                        toast.success("Signed up successfully");
+                        router.push("/");
+                    },
+                    onError: (error) => {
+                        toast.error(error.error.message);
+                    }
+                }
+            })
+        })
     }
     return (
         <Card>
@@ -55,7 +78,14 @@ export default function SignUpPage() {
                                 }
                             </Field>
                         )}/>
-                        <Button>Sign Up</Button>
+                        <Button disabled={isPending}>{isPending ?(
+                            <>
+                            <Loader2 className="size-4 animate-spin" />
+                            <span>signing up...</span>
+                            </>
+                        ): (
+                            <span>sign up</span>
+                        )}</Button>
                     </FieldGroup>
                 </form>
             </CardContent>
