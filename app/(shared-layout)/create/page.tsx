@@ -9,16 +9,13 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import z from "zod";
-import { startTransition, useTransition } from "react";
-import { useMutation } from "convex/react";
-import { api } from "@/convex/_generated/api";
-import { toast } from "sonner";
-import { useRouter } from "next/navigation";
+import { useTransition } from "react";
+// import { toast } from "sonner";
+import { createBlogAction } from "@/app/actions";
+
 
 export default function CreateRoute() {
     const [isPending, startTransition] = useTransition();
-    const mutation = useMutation(api.blogs.createBlog);
-    const router = useRouter();
     const form =useForm({
             resolver:zodResolver(blogSchema),
             defaultValues:{
@@ -28,12 +25,9 @@ export default function CreateRoute() {
         })
     function onSubmit(data: z.infer<typeof blogSchema>) {
         startTransition(async () => {
-           await mutation({
-            title:data.title,
-            content:data.content,
-           })
-           toast.success("Blog created successfully")
-           router.push("/")
+            console.log("From the client");
+            await createBlogAction(data);
+            // toast.success("Blog created successfully");
         })
     }
     return (

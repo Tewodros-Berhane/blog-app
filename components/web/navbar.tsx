@@ -34,7 +34,7 @@ export function Navbar() {
                                 toast.error(error.error.message);
                             }
                         }
-                    })}>Sign out</Button>
+                    })}>Log out</Button>
                 ) : (
                     <>
                     <Link className={buttonVariants()} href="/auth/sign-up">Sign up</Link>
