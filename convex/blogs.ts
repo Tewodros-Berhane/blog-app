@@ -20,6 +20,5 @@ export const getBlogs = query({
     handler: async (ctx) => {
       const blogs = await ctx.db.query('blogs').order('desc').collect();
       return blogs;
-        
     },
 });

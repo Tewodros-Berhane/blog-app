@@ -21,8 +21,8 @@ export default function CreateRoute() {
             defaultValues:{
                 title:"",
                 content:"",
-            }
-        })
+        }
+    })
     function onSubmit(data: z.infer<typeof blogSchema>) {
         startTransition(async () => {
             console.log("From the client");
@@ -43,35 +43,35 @@ export default function CreateRoute() {
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FieldGroup className="gap-y-4">
-                        <Controller name="title" control={form.control} render={({ field, fieldState }) => (
-                            <Field>
-                                <FieldLabel>Title</FieldLabel>
-                                <Input aria-invalid={fieldState.invalid} placeholder="Enter your title" {...field} />
-                                {fieldState.invalid &&
-                                    <FieldError errors={[fieldState.error]} />
-                                }
-                            </Field>
-                        )} />
-                        <Controller name="content" control={form.control} render={({ field, fieldState }) => (
-                            <Field>
-                                <FieldLabel>Content</FieldLabel>
-                                <Textarea aria-invalid={fieldState.invalid} placeholder="Enter your content" {...field} />
-                                {fieldState.invalid &&
-                                    <FieldError errors={[fieldState.error]} />
-                                }
-                            </Field>
-                        )} />
-                        <Button disabled={isPending}>{isPending ? (
-                            <>
-                                <Loader2 className="size-4 animate-spin" />
-                                <span>Creating...</span>
-                            </>
-                        ) : (
-                            <span>Create Blog</span>
-                        )}</Button>
-                    </FieldGroup>
-                </form>
+                        <FieldGroup className="gap-y-4">
+                            <Controller name="title" control={form.control} render={({ field, fieldState }) => (
+                                <Field>
+                                    <FieldLabel>Title</FieldLabel>
+                                    <Input aria-invalid={fieldState.invalid} placeholder="Enter your title" {...field} />
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />
+                                    }
+                                </Field>
+                            )} />
+                            <Controller name="content" control={form.control} render={({ field, fieldState }) => (
+                                <Field>
+                                    <FieldLabel>Content</FieldLabel>
+                                    <Textarea aria-invalid={fieldState.invalid} placeholder="Enter your content" {...field} />
+                                    {fieldState.invalid &&
+                                        <FieldError errors={[fieldState.error]} />
+                                    }
+                                </Field>
+                            )} />
+                            <Button disabled={isPending}>{isPending ? (
+                                <>
+                                    <Loader2 className="size-4 animate-spin" />
+                                    <span>Creating...</span>
+                                </>
+                            ) : (
+                                <span>Create Blog</span>
+                            )}</Button>
+                        </FieldGroup>
+                    </form>
                 </CardContent>
             </Card>
         </div>
