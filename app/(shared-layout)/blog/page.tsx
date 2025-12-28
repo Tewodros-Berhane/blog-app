@@ -13,7 +13,7 @@ import { fetchQuery } from "convex/nextjs";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 
-export default  function BlogPage() {
+export default function BlogPage() {
   return (
     <div className="py-12">
       <div className="text-center pb-12">
@@ -38,14 +38,19 @@ async function LoadBlog() {
     <div className="grid gap-6 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
       {blogs?.map((blog) => (
         <Card key={blog._id} className="pt-0">
-          <div className="relative h-48 w-full overflow-hidden">
-            <Image
-              fill
-              src="https://plus.unsplash.com/premium_photo-1683211783920-8c66ab120c09?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-              alt={blog.title + "image"}
-              className="rounded-t-lg"
-            />
-          </div>
+          {blog.imageUrl && (
+            <div className="relative h-48 w-full overflow-hidden">
+              <Image
+                fill
+                src={
+                  blog.imageUrl ??
+                  "https://plus.unsplash.com/premium_photo-1683211783920-8c66ab120c09?q=80&w=1932&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                }
+                alt={blog.title + " image"}
+                className="rounded-t-lg object-cover"
+              />
+            </div>
+          )}
           <CardContent>
             <Link href={`/blog/${blog._id}`}>
               <h1 className="text-2xl font-bold hover:text-primary">
@@ -85,3 +90,5 @@ function SkeletonBlog() {
     </div>
   );
 }
+
+
