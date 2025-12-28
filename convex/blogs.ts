@@ -7,7 +7,7 @@ export const createBlog = mutation({
   args: {
     title: v.string(),
     content: v.string(),
-    imageStorageId: v.optional(v.id("_storage")),
+    imageStorageId: v.id("_storage"),
   },
   handler: async (ctx, args) => {
     const user = await authComponent.safeGetAuthUser(ctx);
@@ -55,5 +55,24 @@ export const generateImageUploadUrl = mutation({
     }
     const uploadUrl = await ctx.storage.generateUploadUrl();
     return uploadUrl;
+  },
+});
+
+export const getBlogById = query({
+  args: {
+    blogId: v.id("blogs"),
+  },
+  handler: async (ctx, args) => {
+    const blog = await ctx.db.get(args.blogId);
+    if (!blog) {
+      throw new ConvexError("Not found");
+    }
+    const resolvedImageUrl = blog.imageStorageId
+      ? await ctx.storage.getUrl(blog.imageStorageId)
+      : null;
+    return {
+      ...blog,
+      imageUrl: resolvedImageUrl,
+    };
   },
 });

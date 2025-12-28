@@ -6,6 +6,12 @@ export default defineSchema({
         title: v.string(),
         content: v.string(),
         authorId: v.string(),
-        imageStorageId: v.optional(v.id("_storage"))
+        imageStorageId: v.id("_storage")
+    }),
+    comments: defineTable({
+        blogId: v.id("blogs"),
+        content: v.string(),
+        authorId: v.string(),
+        authorName: v.string(),
     })
 })
