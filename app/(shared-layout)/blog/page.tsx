@@ -13,11 +13,12 @@ import { fetchQuery } from "convex/nextjs";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Metadata } from "next";
+import { cacheLife, cacheTag } from "next/cache";
 
 export const metadata: Metadata = {
-  title: 'Our Blog',
-  description: 'Insights and updates from our team.',
-}
+  title: "Our Blog",
+  description: "Insights and updates from our team.",
+};
 
 export default function BlogPage() {
   return (
@@ -38,6 +39,9 @@ export default function BlogPage() {
 }
 
 async function LoadBlog() {
+  "use cache";
+  cacheLife("hours")
+  cacheTag("blog");
   const blogs = await fetchQuery(api.blogs.getBlogs);
 
   return (
@@ -96,5 +100,3 @@ function SkeletonBlog() {
     </div>
   );
 }
-
-

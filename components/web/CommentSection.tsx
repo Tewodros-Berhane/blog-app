@@ -85,7 +85,11 @@ export default function CommentSection(props: {
           </Button>
         </form>
         {comments?.length > 0 && <Separator />}
-        <section className="space-y-6">
+        <section
+          className={`space-y-6 ${
+            comments?.length > 4 ? "max-h-[280px] overflow-y-auto" : ""
+          }`}
+        >
           {comments?.map((comment) => (
             <div key={comment._id} className="flex gap-4">
               <Avatar>
@@ -100,7 +104,7 @@ export default function CommentSection(props: {
               <div className="flex-1 space-y-1">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold">{comment.authorName}</p>
-                  <p className="text-xs text-muted-foreground">
+                  <p className="text-xs text-muted-foreground mr-5">
                     {new Date(comment._creationTime).toLocaleDateString()}
                   </p>
                 </div>

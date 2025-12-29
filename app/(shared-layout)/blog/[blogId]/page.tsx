@@ -10,12 +10,16 @@ import CommentSection from "@/components/web/CommentSection";
 import { Metadata } from "next";
 import { BlogPresence } from "@/components/web/BlogPresence";
 import { getToken } from "@/lib/auth-server";
+import { redirect } from "next/navigation";
 
 interface blogIdRouteProps {
   params: Promise<{
     blogId: Id<"blogs">;
   }>;
 }
+
+// export const dynamic = "force-static";
+// export const revalidate = 30;
 
 export async function generateMetadata({
   params,
@@ -37,6 +41,10 @@ export default async function BlogPage({ params }: blogIdRouteProps) {
     await preloadQuery(api.comments.getComments, { blogId }),
     await fetchQuery(api.presence.getUserId, {}, { token }),
   ]);
+
+  if(!userId) {
+    return redirect("/auth/login");
+  }
   return (
     <div className="max-w-3xl mx-auto py-6 px-4 animate-in fade-in duration-500 relative">
       <Link
