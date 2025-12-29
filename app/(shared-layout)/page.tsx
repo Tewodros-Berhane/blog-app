@@ -16,7 +16,7 @@ export default function Home() {
         <div className="space-y-6 max-w-4xl animate-in fade-in slide-in-from-bottom-8 duration-700 ease-out">
           {/* Badge */}
           <div className="inline-flex items-center rounded-full border border-primary/20 bg-primary/5 px-3 py-1 text-sm font-medium text-primary mb-4">
-            ✨ Launching Version 2.0
+            ✍️ Where ideas find their voice
           </div>
           
           <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-foreground leading-[1.1]">
