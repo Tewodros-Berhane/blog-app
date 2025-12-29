@@ -7,6 +7,9 @@ import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
 import { Separator } from "@/components/ui/separator";
 import CommentSection from "@/components/web/CommentSection";
+import { Metadata } from "next";
+import { BlogPresence } from "@/components/web/BlogPresence";
+import { getToken } from "@/lib/auth-server";
 
 interface blogIdRouteProps {
   params: Promise<{
@@ -14,12 +17,25 @@ interface blogIdRouteProps {
   }>;
 }
 
+export async function generateMetadata({
+  params,
+}: blogIdRouteProps): Promise<Metadata> {
+  const { blogId } = await params;
+  const blog = await fetchQuery(api.blogs.getBlogById, { blogId });
+  return {
+    title: blog.title,
+    description: blog.content,
+  };
+}
+
 export default async function BlogPage({ params }: blogIdRouteProps) {
   const { blogId } = await params;
+  const token = await getToken();
 
-  const [blog, preloadedComments] = await Promise.all([
-    fetchQuery(api.blogs.getBlogById, { blogId }),
-    preloadQuery(api.comments.getComments, { blogId }),
+  const [blog, preloadedComments, userId] = await Promise.all([
+    await fetchQuery(api.blogs.getBlogById, { blogId }),
+    await preloadQuery(api.comments.getComments, { blogId }),
+    await fetchQuery(api.presence.getUserId, {}, { token }),
   ]);
   return (
     <div className="max-w-3xl mx-auto py-6 px-4 animate-in fade-in duration-500 relative">
@@ -45,16 +61,19 @@ export default async function BlogPage({ params }: blogIdRouteProps) {
         <h1 className="text-4xl font-bold tracking-tight text-foreground">
           {blog.title}
         </h1>
-        <p className="text-sm text-muted-foreground">
-          Posted on: {new Date(blog._creationTime).toLocaleDateString()}
-        </p>
+        <div className="flex items-center gap-4">
+            <p className="text-sm text-muted-foreground">
+                Posted on: {new Date(blog._creationTime).toLocaleDateString()}
+            </p>
+            {userId && <BlogPresence roomId={blogId} userId={userId} />}
+        </div>
       </div>
       <Separator className="my-8" />
       <p className="text-lg leading-relaxed text-foreground/90 whitespace-pre-wrap wrap-break-word">
         {blog.content}
       </p>
       <Separator className="my-8" />
-      <CommentSection preloadedComments={preloadedComments}/>
+      <CommentSection preloadedComments={preloadedComments} />
     </div>
   );
 }

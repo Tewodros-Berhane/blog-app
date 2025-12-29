@@ -12,6 +12,12 @@ import { buttonVariants } from "@/components/ui/button";
 import { fetchQuery } from "convex/nextjs";
 import { Suspense } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: 'Our Blog',
+  description: 'Insights and updates from our team.',
+}
 
 export default function BlogPage() {
   return (
